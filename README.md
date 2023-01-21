@@ -3,3 +3,6 @@ Nicholas Williams, David Reed, Setul Parekh, Chase McCoy
 
 # Just write something here for your commit
 Nicholas Williams commit
+
+# List of team member names for GitHub flow practice
+- Nicholas Williams
