@@ -9,3 +9,4 @@ Setul Parekh commit
 
 # List of team member names for GitHub flow practice
 - Nicholas Williams
+- Setul Parekh
