@@ -11,3 +11,4 @@ Setul Parekh commit
 - Nicholas Williams
 - Setul Parekh
 - David Reed
+- Chase McCoy
