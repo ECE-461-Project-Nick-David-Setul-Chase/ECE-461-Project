@@ -12,8 +12,9 @@ fn main() {
     Command::new("python3")
             .arg("Metricizer/Metricizer.py")
             .arg(input_file)
+            //.arg("ScorerModule.rs")
+            //.arg("Output.rs")
             .spawn()
             .expect("Metricizer failed to start");
-
 
 }
