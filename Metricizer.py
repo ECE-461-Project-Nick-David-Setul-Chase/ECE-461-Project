@@ -30,6 +30,7 @@ def Main(inputfile):
     for url in file_ptr:
         #Grab dictionary from graphQL API
         gql_info = call_graphQL(url, api_token)
+        
         #Grab dictionary from REST API
         rest_info = call_rest(url, api_token)
 

@@ -1,7 +1,9 @@
 import json
 import requests
 
-def call_graphQL(url_):
+#Arguments: Source URL, API token
+#Returns: Dictionary starting with 'data' key
+def call_graphQL(url_, api_token):
 
     #URL format: https://github.com/user/repo
 
@@ -14,14 +16,28 @@ def call_graphQL(url_):
     user = url_useful[0 : repo_index]
     repo = url_useful[(repo_index + 1) :]
 
-    #json_ = { 'query' : '{ repository(owner: "cloudinary", name: "cloudinary_npm") { updatedAt } }' }
-
-    query_ = '{ repository(owner:"' + user + '", name:"' + repo + '") { issues(states:OPEN) {totalCount}}}'
+    #Query to get needed data from API
+    query_ = '''
+    { 
+        repository(owner:"''' + user + '''", name:"''' + repo + '''") {
+            issues(states:OPEN) {
+                totalCount
+            }
+            assignableUsers{
+                totalCount
+            }
+            object(expression: "master:README.md") {
+            ... on Blob {
+                text
+                }
+            }
+        }
+    }'''
 
     json_ = { 'query' : query_ } 
-    api_token = "GITHUB KEY HERE"
     headers_ = {'Authorization': 'token %s' % api_token}
+    response = requests.post(url=url_, json=json_, headers=headers_)
+    data = json.loads(response.text)
 
-    r = requests.post(url=url_, json=json_, headers=headers_)
-    print (r.text)
+    return data
 
