@@ -43,7 +43,7 @@ def Main(inputfile):
         repo_license = calc_license(info)
 
         #Write metrics to metric output
-        output_metric.write("Insert data here and a \n to finish it off.")
+        output_metric.write("url,rampup,correctness,busfactor,responsive_maintainer,repo_license\n")
 
     #Closing all files
     file_ptr.close()
