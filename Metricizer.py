@@ -34,16 +34,19 @@ def Main(inputfile):
         #Grab dictionary from REST API
         rest_info = call_rest(url, api_token)
 
-        #Calculate metrics
-        info = "deleteME"
-        rampup = calc_rampup(info)
-        correctness = calc_correctness(info)
-        busfactor = calc_busfactor(info)
-        responsive_maintainer = calc_responsive_maintainer(info)
-        repo_license = calc_license(info)
+        #Find metric params
+        readme_exist = true
+        doc_exist = true
+        issues_closed = 5
+        issues_total = 10
+        num_contribute = 5
+        weeks_last_issue = 2
+        license_correct = true
 
         #Write metrics to metric output
-        output_metric.write("url,rampup,correctness,busfactor,responsive_maintainer,repo_license\n")
+        #Format: url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
+        #Example: https://github.com/user/repo,1,1,45,64,5,2,1
+        output_metric.write(url + "," + readme_exist + "," + doc_exist + "," + issues_closed + "," + issues_total + "," + num_contribute + "," + weeks_last_issue + "," + license_correct + "\n")
 
     #Closing all files
     file_ptr.close()
@@ -69,20 +72,9 @@ def calc_license(info):
     return -999
     pass
 
-
-#########################################################################
-
-# api_token = os.environ.get("GITHUB_TOKEN") 
-
-# file_ptr = open(sys.argv[1])
-# urls = file_ptr.readlines()
-
-# for url in urls:
-#     gql_info = call_graphQL(url, api_token)
-#     rest_info = call_rest(url, api_token)
-
-#     rampup = calc_rampup(info)
-#     correctness = calc_correctness(info)
-#     busfactor = calc_busfactor(info)
-#     responsive_maintainer = calc_responsive_maintainer(info)
-#     repo_license = calc_license(info)
+        # info = "deleteME"
+        # rampup = calc_rampup(info)
+        # correctness = calc_correctness(info)
+        # busfactor = calc_busfactor(info)
+        # responsive_maintainer = calc_responsive_maintainer(info)
+        # repo_license = calc_license(info)
