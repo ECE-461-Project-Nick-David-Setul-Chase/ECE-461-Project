@@ -1,94 +1,83 @@
 use std::fs::File;
-use std::io::{ self, BufRead, BufWriter, Write};
+use std::io::{ self, BufRead, BufReader, Write};
 
 pub const MIN_POSITIVE: f64 = 2.2250738585072014E-308f64;
 
-fn read_lines(filename: String) -> io::BufReader<File> {
-    let file = File::open(filename).unwrap(); 
-    return io::BufReader::new(file); 
-}
-
-fn calculate_scores(metrics: Vec<f64>) -> [f64; 6] {
-
-    let num_lines = metrics[0];
-    let num_comments = metrics[1];
-    let readme_exists = metrics[2];
-    let documentation_exists = metrics[3];
-    let num_linter_warnings = metrics[4];
-    let num_contributors = metrics[5];
-    let num_issues = metrics[6];
-    let correct_license = metrics[7];
-
-    let mut scores: [f64; 6] = [0.0,0.0,0.0,0.0,0.0,0.0];
-
-    // RampUp
-    scores[0] =   num_comments / (num_lines - num_comments) * 0.5
-                + readme_exists * 0.2
-                + documentation_exists * 0.3;
-
-    if scores[0] > 1.0 {
-        scores[0] = 1.0;
-    }
-    if scores[0] < 0.0 {
-        scores[0] = 0.0;
-    }
-
-
-    // Correctness
-    scores[1] = 1.0 - (num_linter_warnings / (num_lines + MIN_POSITIVE)); // avoid divide by 0
-
-    if scores[1] < 0.0 {
-        scores[1] = 0.0;
-    }
-
-    // BusFactor
-    scores[2] = 1.0 - (1.0 / (num_contributors + MIN_POSITIVE));
-
-    if scores[2] < 0.0 {
-        scores[2] = 0.0;
-    }
-
-    // ResponsiveMaintainer
-    scores[3] = 1.0 / (num_issues + MIN_POSITIVE);
-    
-    if scores[3] > 1.0 {
-        scores[3] = 1.0;
-    }
-
-    // CorrectLicense
-    scores[4] = correct_license;
-
-    // Total
-    scores[5] =    scores[0] * 0.15
-                + scores[1] * 0.2
-                + scores[2] * 0.2
-                + scores[3] * 0.15
-                + scores[4] * 0.3;
-
-
-    return scores;
-}
-
-
 fn main() {
-    let line_reader = read_lines("test_score_data.txt".to_string());
-    
-    let metrics: Vec<f64> = line_reader
-        .lines()
-        .map(|x| x.unwrap().parse::<f64>().unwrap())
-        .collect();
 
-    println!("{:?}", metrics);
+    let lines = read_lines("test_score_data.txt".to_string());
+    let mut full_metrics = Vec::new();
 
-    let scores: [f64; 6] = calculate_scores(metrics);
-
-    println!("{:?}", scores);
-
-    let output_file = File::create("Scores.txt").unwrap();
-    let mut writer = BufWriter::new(output_file);
-
-    for score in scores {
-        writeln!(writer, "{}", score);
+    for line in lines {
+        let repo_metrics: Vec<String> = line.expect("failed to parse").split(",").map(str::to_string).collect();
+        full_metrics.push(repo_metrics);
     }
+
+    let full_scores = calculate_scores(full_metrics.clone());
+
+    // write to output
+    let scores_output_file = File::create("Scores.txt");
+    for repo in 0..(full_scores.len() - 1) {
+        for score in 0..6 {
+            scores_output_file.as_ref().expect("failed to write").write(&full_scores[repo][score].as_bytes()).ok();
+            scores_output_file.as_ref().expect("failed to write").write(", ".as_bytes()).ok();
+        }
+        scores_output_file.as_ref().expect("failed to write").write(&full_scores[repo][6].as_bytes()).ok();
+        scores_output_file.as_ref().expect("failed to write").write("\n".as_bytes()).ok();
+    }
+    for score in 0..6 {
+        scores_output_file.as_ref().expect("failed to write").write(&full_scores[full_scores.len()-1][score].as_bytes()).ok();
+        scores_output_file.as_ref().expect("failed to write").write(", ".as_bytes()).ok();
+    }
+    scores_output_file.as_ref().expect("failed to write").write(&full_scores[full_scores.len()-1][6].as_bytes()).ok();
+
+}
+
+fn read_lines(filename: String) -> io::Lines<BufReader<File>> {
+    let file = File::open(filename).unwrap(); 
+    return io::BufReader::new(file).lines(); 
+}
+
+fn calculate_scores(full_metrics_strings: Vec<Vec<String>>) -> Vec<[String; 7]> {
+
+    // for repo_metrics in full_metrics_strings:
+        // define each variable
+
+    let mut full_scores = Vec::new();
+
+    for repo_metrics in full_metrics_strings {
+
+        let repo_url: &str = &repo_metrics[0];
+        let readme_exists: f64 = repo_metrics[1].parse().unwrap();
+        let documentation_exists: f64 = repo_metrics[2].parse().unwrap();
+        let issues_closed: f64 = repo_metrics[3].parse().unwrap();
+        let issues_total: f64 = repo_metrics[4].parse().unwrap();
+        let num_contributors: f64 = repo_metrics[5].parse().unwrap();
+        let weeks_since_last_issue: f64 = repo_metrics[6].parse().unwrap();
+        let license_correct: f64 = repo_metrics[7].parse().unwrap();
+
+        let ramp_up: f64 = 0.5 * readme_exists + 0.5 * documentation_exists;
+        let correctness: f64 = issues_closed / (issues_total + MIN_POSITIVE); // prevent divide by 0
+        let bus_factor: f64 = 1.0 - (1.0 / num_contributors);
+        let responsive_maintainer: f64 = 1.0 / (weeks_since_last_issue + MIN_POSITIVE); // prevent divide by 0
+        let license: f64 = license_correct;
+        let total: f64 = 0.15 * ramp_up + 
+                         0.2 * correctness +
+                         0.2 * bus_factor +
+                         0.15 * responsive_maintainer +
+                         0.3 * license;
+
+        let repo_scores: [String; 7] = [repo_url.to_string(), 
+                                        ramp_up.to_string(), 
+                                        correctness.to_string(), 
+                                        bus_factor.to_string(),
+                                        responsive_maintainer.to_string(),
+                                        license.to_string(),
+                                        total.to_string()];
+
+        full_scores.push(repo_scores);
+    }
+
+    return full_scores;
 
 }
