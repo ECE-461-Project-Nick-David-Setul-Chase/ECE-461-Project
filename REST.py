@@ -69,7 +69,7 @@ def call_rest(url, api_token):
             if data_license['message']:
                 license_correct = False
         except:
-            if data_license['license'] == "GNU...":
+            if data_license['license'] == "GNU...": # replace 'GNU...' with GNU license returned
                 license_correct = True
             else:
                 license_correct = False
