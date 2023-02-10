@@ -29,7 +29,7 @@ def call_rest(url, api_token):
             if issue['state'] == 'closed':
                 issues_closed += 1
             # find weeks since last issue, date format: 'created_at': '2020-04-20T22:16:33Z'
-            weeks_this_issue = abs(datetime.now() - (datetime.strptime(issue['created_at'], '%m/%d/%yT%H:%M:%SZ'))).days//7
+            weeks_this_issue = abs(datetime.now() - (datetime.strptime(issue['created_at'], '%y/%m/%dT%H:%M:%SZ'))).days//7
             # take care of initial value
             if weeks_last_issue == -1:
                 weeks_last_issue = weeks_this_issue
