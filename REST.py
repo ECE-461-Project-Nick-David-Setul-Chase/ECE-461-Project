@@ -5,16 +5,28 @@ import json
 #Output: data = str
 def call_rest(url, api_token):
 
-    #User = input("Enter name of user: ")
-    #url = f"https://api.github.com/user"
+    # authorization token
     headers = {'Authorization': 'token ' + api_token}
-    # for issues
 
-    # output = requests.get(url,data=json.dumps(data))
-    # url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
+    # grabbing everything past https://github.com/
+    url_useful = url[19:]
+
+    # find index of start of repo name
+    repo_index = url_useful.find('/')
+
+    # get user and repo
+    user = url_useful[0 : repo_index]
+    repo = url_useful[(repo_index + 1) :]
+
+    # create url for rest api
+    rest_url = 'https://api.github.com/' + user + '/' + repo
+
+    # output format: url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
+
     try:
+        # calculate total issues, closed issues, and weeks since last issue
         # get all issues
-        url_issues = url + "/issues"
+        url_issues = rest_url + "/issues"
         query_issues = {"state" : "all"}
         output_issues = requests.get(url_issues, headers=headers, params=query_issues) #data=json.dumps(query)
         data_issues = output_issues.json()
@@ -40,9 +52,8 @@ def call_rest(url, api_token):
 
 
         # get license
-        url_license = url + "/license"
-        query_license = {"license" : "LICENSE"} # incorrect?
-        output_license = requests.get(url_license, headers=headers, params=query_license)
+        url_license = rest_url + "/license"
+        output_license = requests.get(url_license, headers=headers)
         data_license = output_license.json()
         if data_license['license'] == "GNU...":
             license_correct = True
@@ -50,24 +61,30 @@ def call_rest(url, api_token):
             license_correct = False
 
         # get readme
-        url_readme = url + "/readme"
-        query_readme = {"readme" : "README"} # incorrect
-        output_readme = requests.get(url_readme, headers=headers, params=query_readme) 
+        url_readme = rest_url + "/readme"
+        output_readme = requests.get(url_readme, headers=headers)
         data_readme = output_readme.json()
-        if data_license['readme']:
+        if data_readme['readme']:
             readme_exist = True
         else:
             readme_exist = False
 
         # get contributors
-        url_contributors = url + "/contributors"
-        query_contributors = {"contributors" : "CONTRIBUTORS"} # incorrect
-        output_contributors = requests.get(url_contributors, headers=headers, params=query_contributors)
+        url_contributors = rest_url + "/contributors"
+        output_contributors = requests.get(url_contributors, headers=headers)
         data_contributors = output_contributors.json()
         num_contribute = len(data_contributors['contributors'])
 
+        # get wiki (documentation) DOES NOT WORK
+        url_wiki = rest_url + "/wikis"
+        output_wiki = requests.get(url_wiki, headers=headers)
+        data_wiki = output_wiki.json()
+        if data_wiki['wiki']:
+            doc_exist = True
+        else:
+            doc_exist = False
 
-        #print(output)
         return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
+
     except:
         return []
