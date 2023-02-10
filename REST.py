@@ -19,7 +19,7 @@ def call_rest(url, api_token):
     repo = url_useful[(repo_index + 1) :]
 
     # create url for rest api
-    rest_url = 'https://api.github.com/' + user + '/' + repo
+    rest_url = 'https://api.github.com/repos/' + user + '/' + repo
 
     # output format: url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
 
@@ -30,61 +30,94 @@ def call_rest(url, api_token):
         query_issues = {"state" : "all"}
         output_issues = requests.get(url_issues, headers=headers, params=query_issues) #data=json.dumps(query)
         data_issues = output_issues.json()
-        # get total amount of issues
-        issues_total = len(data_issues)
+        #print(data_issues)
+        try:
+            # if not found
+            if data_issues['message']:
+                issues_total = 0
+                issues_closed = 0
+                weeks_last_issue = 0
+        except:
+            # get total amount of issues
+            issues_total = len(data_issues)
 
-        # find date of last issue and get weeks since, also get closed issues
-        issues_closed = 0
-        weeks_last_issue = -1
-        for issue in data_issues:
-            # increment closed issues
-            if issue['state'] == 'closed':
-                issues_closed += 1
-            # find weeks since last issue, date format: 'created_at': '2020-04-20T22:16:33Z'
-            weeks_this_issue = abs(datetime.now() - (datetime.strptime(issue['created_at'], '%y/%m/%dT%H:%M:%SZ'))).days//7
-            # take care of initial value
-            if weeks_last_issue == -1:
-                weeks_last_issue = weeks_this_issue
-            # if a issue is found that is closer to today, set that as new week since last issue
-            else:
-                if weeks_this_issue < weeks_last_issue:
+            # find date of last issue and get weeks since, also get closed issues
+            issues_closed = 0
+            weeks_last_issue = -1
+            for issue in data_issues:
+                # increment closed issues
+                if issue['state'] == 'closed':
+                    issues_closed += 1
+                # find weeks since last issue, date format: 'created_at': '2020-04-20T22:16:33Z'
+                weeks_this_issue = abs(datetime.now() - datetime.fromisoformat( issue['created_at'].replace('Z', ''))).days//7
+                # take care of initial value
+                if weeks_last_issue == -1:
                     weeks_last_issue = weeks_this_issue
+                # if a issue is found that is closer to today, set that as new week since last issue
+                else:
+                    if weeks_this_issue < weeks_last_issue:
+                        weeks_last_issue = weeks_this_issue
 
 
-        # get license
+        # get license DOES NOT WORK
         url_license = rest_url + "/license"
         output_license = requests.get(url_license, headers=headers)
         data_license = output_license.json()
-        if data_license['license'] == "GNU...":
-            license_correct = True
-        else:
-            license_correct = False
+        #print(data_license)
+        try:
+            # if not found
+            if data_license['message']:
+                license_correct = False
+        except:
+            if data_license['license'] == "GNU...":
+                license_correct = True
+            else:
+                license_correct = False
 
         # get readme
         url_readme = rest_url + "/readme"
         output_readme = requests.get(url_readme, headers=headers)
         data_readme = output_readme.json()
-        if data_readme['readme']:
-            readme_exist = True
-        else:
-            readme_exist = False
+        #print(data_readme)
+        try:
+            # if not found
+            if data_readme['message']:
+                license_correct = False
+        except:
+            if data_readme['name']:
+                readme_exist = True
+            else:
+                readme_exist = False
 
         # get contributors
         url_contributors = rest_url + "/contributors"
         output_contributors = requests.get(url_contributors, headers=headers)
         data_contributors = output_contributors.json()
-        num_contribute = len(data_contributors['contributors'])
+        #print(data_contributors)
+        try:
+            # if not found
+            if data_contributors['message']:
+                num_contribute = 0
+        except:
+            num_contribute = len(data_contributors)
 
         # get wiki (documentation) DOES NOT WORK
         url_wiki = rest_url + "/wikis"
         output_wiki = requests.get(url_wiki, headers=headers)
         data_wiki = output_wiki.json()
-        if data_wiki['wiki']:
-            doc_exist = True
-        else:
-            doc_exist = False
+        #print(data_wiki)
+        try:
+            # if not found
+            if data_wiki['message']:
+                doc_exist = False
+        except:
+            if data_wiki['wiki']:
+                doc_exist = True
+            else:
+                doc_exist = False
 
         return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
-    except:
+    except Exception as e:
+        print(e)
         return []
