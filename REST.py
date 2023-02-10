@@ -38,7 +38,36 @@ def call_rest(url, api_token):
                 if weeks_this_issue < weeks_last_issue:
                     weeks_last_issue = weeks_this_issue
 
+
+        # get license
+        url_license = url + "/license"
+        query_license = {"license" : "LICENSE"} # incorrect?
+        output_license = requests.get(url_license, headers=headers, params=query_license)
+        data_license = output_license.json()
+        if data_license['license'] == "GNU...":
+            license_correct = True
+        else:
+            license_correct = False
+
+        # get readme
+        url_readme = url + "/readme"
+        query_readme = {"readme" : "README"} # incorrect
+        output_readme = requests.get(url_readme, headers=headers, params=query_readme) 
+        data_readme = output_readme.json()
+        if data_license['readme']:
+            readme_exist = True
+        else:
+            readme_exist = False
+
+        # get contributors
+        url_contributors = url + "/contributors"
+        query_contributors = {"contributors" : "CONTRIBUTORS"} # incorrect
+        output_contributors = requests.get(url_contributors, headers=headers, params=query_contributors)
+        data_contributors = output_contributors.json()
+        num_contribute = len(data_contributors['contributors'])
+
+
         #print(output)
-        return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct];
+        return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
     except:
         return []
