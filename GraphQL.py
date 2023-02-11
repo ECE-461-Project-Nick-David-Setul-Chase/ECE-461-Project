@@ -7,6 +7,8 @@ from datetime import datetime
 def call_graphQL(url_, api_token):
 
     url_graphQL = 'https://api.github.com/graphql'
+    #https://github.com/
+    #https://github.com/
     
     #URL format: https://github.com/user/repo
 
@@ -18,6 +20,7 @@ def call_graphQL(url_, api_token):
     user = url_useful[0 : repo_index]
     repo = url_useful[(repo_index + 1) :]
 
+    #NEED TO ADD LICENSE TO THIS JUST IN CASEEEEEEEEEEEEEE
     #Query to get needed data from API
     query_ = '''
     { 
@@ -64,10 +67,11 @@ def filterData(data):
     weeks_last_issue = (days_last_issue.days) / 7
 
     #Checking if README exists
-    readme = (data['data']['repository']['object']['text']) 
-    if not readme:
+    if (data['data']['repository']['object']) is None:
         readme_exist = False
-    else: 
+        readme = ""
+    else:
+        readme = (data['data']['repository']['object']['text']) 
         readme_exist = True
 
     #Grabbing other metrics
@@ -79,13 +83,6 @@ def filterData(data):
     license_correct = True
     find_license(readme)
 
-    print('Has README: ' + str(readme_exist))
-    print('Has good documentation: ' + str(doc_exist))
-    print('Issues closed: ' + str(issues_closed))
-    print('Total issues: ' + str(issues_total))
-    print('Number of assignable users: ' + str(num_contribute))
-    print('Weeks since last opened issue: ' + str(weeks_last_issue))
-
     data_list = [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
     return data_list
@@ -93,6 +90,7 @@ def filterData(data):
 def find_license(readme):
     #print('Look for license')
     #print(readme)
+    
     index = readme.find('MIT')
     print('License found at index: ' + str(index))
 

@@ -1,1 +1,5 @@
-https://github.com/cloudinary/cloudinary_npm,True,False,23,30,175,5.571428571428571,True
+https://github.com/cloudinary/cloudinary_npm,1,0,23,30,175,5.571428571428571,1
+https://github.com/expressjs/express,0,1,18,30,66,0.2857142857142857,1
+https://github.com/nullivex/nodist,1,0,9,30,6,37.142857142857146,1
+https://github.com/lodash/lodash,1,1,3,30,9,0.14285714285714285,1
+https://github.com/browserify/browserify,0,1,14,30,41,0.14285714285714285,1
