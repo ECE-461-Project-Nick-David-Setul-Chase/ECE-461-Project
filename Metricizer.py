@@ -34,15 +34,15 @@ def metricizer(inputfile):
     #     print(line)
     
     #Grab API token
-    #api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
-    api_token = "fill in" #FOR TESTING ONLY
+    api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
+    #api_token = "fill in" #FOR TESTING ONLY
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
 
     #Open input file
-    #file_ptr = open(sys.argv[1]) #THE REAL DEAL
-    file_ptr = open(inputfile) #FOR TESTING ONLY
+    file_ptr = open(sys.argv[1]) #THE REAL DEAL
+    #file_ptr = open(inputfile) #FOR TESTING ONLY
 
     #Read line by line in URL input file
     for url in file_ptr:
