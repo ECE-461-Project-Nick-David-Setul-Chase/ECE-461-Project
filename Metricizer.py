@@ -2,7 +2,9 @@ import sys
 import os
 import requests
 from bs4 import BeautifulSoup
-#import git
+os.environ["GIT_PYTHON_REFRESH"] = "quiet"
+os.environ["GIT_PYTHON_GIT_EXECUTABLE"] = os.getcwd() 
+from git.repo.base import Repo
 #this is gitpython
 # From .env import load_.env load_dotenv()
 from GraphQL import call_graphQL
@@ -22,8 +24,6 @@ NPMJS_ERR = -1
 def metricizer(inputfile):
 
     success = 0
-
-    path = os.getcwd()
     
     #print(sys.argv)
 
@@ -34,25 +34,25 @@ def metricizer(inputfile):
     #     print(line)
     
     #Grab API token
-    api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
-    #api_token = "blahhhhhhhhh" #FOR TESTING ONLY
+    #api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
+    api_token = "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" #FOR TESTING ONLY
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
 
     #Open input file
-    file_ptr = open(sys.argv[1]) #THE REAL DEAL
-    #file_ptr = open(inputfile) #FOR TESTING ONLY
+    #file_ptr = open(sys.argv[1]) #THE REAL DEAL
+    file_ptr = open(inputfile) #FOR TESTING ONLY
 
     #Read line by line in URL input file
     for url in file_ptr:
         
+        #path = createDir(url)
+        #print(path)
+
         url = url.strip()
         
         domain = getDomain(url)
-
-        print("___________")
-        print(url)
         
         if (domain == OTHER):
             print("Unsupported domain detected.\nModules must be supported on one of the following domains:\n  - github.com\n  - npmjs.com")
@@ -83,16 +83,20 @@ def metricizer(inputfile):
                 writeOutput(output_metric, data)
                 return 1
 
+            #Repo.clone_from(url, path)
+            
             #Find metric params
             readme_exist = int(gql_info[0])
             doc_exist = int(gql_info[1])
             issues_closed = gql_info[2]
-            issues_total = gql_info[3]
+            issues_total1 = gql_info[3]
+            issues_total2 = rest_info[3]
+            print("GraphQL issues: " + str(issues_total1) + " REST issues: " + str(issues_total2))
             num_contribute = gql_info[4]
             weeks_last_issue = gql_info[5]
             license_correct = int(gql_info[6])
 
-            data = [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
+            data = [url, readme_exist, doc_exist, issues_closed, issues_total1, num_contribute, weeks_last_issue, license_correct]
 
             writeOutput(output_metric, data) 
 
@@ -103,6 +107,7 @@ def metricizer(inputfile):
 
     return 0 
 
+
 #Determine module source domain
 def getDomain(url):
     domain = OTHER
@@ -111,6 +116,7 @@ def getDomain(url):
     elif(url.find("npmjs.com") != -1):
         domain = NPMJS
     return domain
+
 
 #Write metrics to metric output
 #Format: url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
@@ -129,6 +135,21 @@ def npmjs_scrap(url):
         return("")
     else: return(row)
     
+
+def createDir(url_):
+    #Grabbing repo name
+    url_useful = url_[19:]
+    repo_index = url_useful.find('/')
+    repo = (url_useful[(repo_index + 1) :]).strip()
+
+    #Create new directory
+    parent_dir = os.getcwd()
+    path = os.path.join(parent_dir, repo)
+    print(path)
+    os.mkdir(path)
+
+    return path
+
 
 #####################################################
 if __name__ == '__main__':

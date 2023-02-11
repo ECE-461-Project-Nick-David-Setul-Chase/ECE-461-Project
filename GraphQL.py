@@ -61,10 +61,12 @@ def call_graphQL(url_, api_token):
     response = requests.post(url=url_graphQL, json=json_, headers=headers_)
     
     #Check for error
-    if(response.status_code >= 400):
+    data = json.loads(response.text)
+    #print(data)
+    if(response.status_code >= 400 or data['data']['repository'] == None):
         filteredData = []
     else:
-        data = json.loads(response.text)
+        #data = json.loads(response.text)
         filteredData = filterData(data)
     
     return filteredData
@@ -74,11 +76,14 @@ def filterData(data):
     license_correct = 0
 
     #Finding date since last issue opened
-    date_raw = (data['data']['repository']['issueLastOpened']['nodes'])[0]['createdAt']
-    datetime_now = datetime.now()
-    datetime_raw = datetime.strptime(date_raw, '%Y-%m-%dT%H:%M:%SZ')
-    days_last_issue = datetime_now - datetime_raw
-    weeks_last_issue = (days_last_issue.days) / 7
+
+    weeks_last_issue = 0
+    if data['data']['repository']['issueLastOpened']['nodes'] != []:
+        date_raw = (data['data']['repository']['issueLastOpened']['nodes'])[0]['createdAt']
+        datetime_now = datetime.now()
+        datetime_raw = datetime.strptime(date_raw, '%Y-%m-%dT%H:%M:%SZ')
+        days_last_issue = datetime_now - datetime_raw
+        weeks_last_issue = (days_last_issue.days) / 7
 
     #Checking if README exists
     if (data['data']['repository']['object']) is None:
