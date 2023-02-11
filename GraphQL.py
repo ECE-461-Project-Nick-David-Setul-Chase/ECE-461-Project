@@ -101,5 +101,5 @@ def find_license(readme):
 ######################################################################
 
 if __name__ == '__main__':
-    call_graphQL('https://github.com/cloudinary/cloudinary_npm', "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")
+    call_graphQL('https://github.com/cloudinary/cloudinary_npm', "")
 
