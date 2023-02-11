@@ -68,12 +68,12 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_license['message']:
-                license_correct = False
+                license_correct_readme = False
         except:
             if data_license['license'] == "GNU...": # replace 'GNU...' with GNU license returned
-                license_correct = True
+                license_correct_readme = True
             else:
-                license_correct = False
+                license_correct_readme = False
 
         # get readme
         url_readme = rest_url + "/readme"
@@ -83,7 +83,7 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_readme['message']:
-                license_correct = False
+                license_correct_readme = False
         except:
             if data_readme['name']:
                 readme_exist = True
@@ -117,7 +117,7 @@ def call_rest(url, api_token):
             else:
                 doc_exist = False
 
-        return [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
+        return [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct_readme]
 
     except Exception as e:
         print(e)

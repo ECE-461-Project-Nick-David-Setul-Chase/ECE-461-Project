@@ -11,6 +11,7 @@ OTHER = 0
 GITHUB = 1
 NPMJS = 2
 
+API_ERR = -3
 OTHER_ERR = -2
 NPMJS_ERR = -1
 
@@ -19,6 +20,8 @@ NPMJS_ERR = -1
 
 def metricizer(inputfile):
 
+    success = 0
+    
     #print(sys.argv)
 
     #if len(sys.argv) != 2:
@@ -28,14 +31,14 @@ def metricizer(inputfile):
     #     print(line)
     
     #Grab API token
-    #api_token = os.environ.get("GITHUB_TOKEN") 
-    api_token = "liesssssssssss" #FOR TESTING ONLY
+    #api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
+    api_token = "tokennnnnn" #FOR TESTING ONLY
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
 
     #Open input file
-    #file_ptr = open(sys.argv[1])
+    #file_ptr = open(sys.argv[1]) #THE REAL DEAL
     file_ptr = open(inputfile) #FOR TESTING ONLY
 
     #Read line by line in URL input file
@@ -62,6 +65,7 @@ def metricizer(inputfile):
             else: 
                 domain = GITHUB
                 url = github_found
+                print(url)
 
         if (domain == GITHUB):
             print("github.com module detected/found.")
@@ -70,8 +74,14 @@ def metricizer(inputfile):
             gql_info = call_graphQL(url, api_token)
             rest_info = call_rest(url, api_token)
 
-            print(gql_info)
-            print(rest_info)
+            if not gql_info:
+                print("API response failed. Please check token and WIFI connection.")
+                data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
+                writeOutput(output_metric, data)
+                return 1
+            else:
+                print(gql_info)
+                print(rest_info)
 
             #Find metric params
             readme_exist = int(gql_info[0])
@@ -91,6 +101,8 @@ def metricizer(inputfile):
     file_ptr.close()
     output_metric.close()
 
+    return 0 
+
 #Determine module source domain
 def getDomain(url):
     domain = OTHER
@@ -108,6 +120,7 @@ def writeOutput(output_metric, data):
         str(data[5]) + "," + str(data[6]) + "," + str(data[7]) + "\n")
 
 
+#Web scrapping NPMJS to find GitHub repo
 def npmjs_scrap(url):
     req = requests.get(url)
     soupTime = BeautifulSoup(req.text, "html.parser")
