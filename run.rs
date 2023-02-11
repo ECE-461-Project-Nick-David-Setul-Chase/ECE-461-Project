@@ -3,24 +3,54 @@
 // https://doc.rust-lang.org/std/process/struct.Command.html
 // https://doc.rust-lang.org/book/ch12-02-reading-a-file.html
 // https://doc.rust-lang.org/rust-by-example/std/str.html
+// https://doc.rust-lang.org/std/string/struct.String.html
+// https://doc.rust-lang.org/rust-by-example/std/option.html
+// https://doc.rust-lang.org/book/ch12-01-accepting-command-line-arguments.html
+// https://doc.rust-lang.org/std/process/fn.exit.html
+// https://doc.rust-lang.org/std/vec/struct.Vec.html
 
-//use std::process::Command;
-//use std::env;
+use std::process::Command;
+use std::env;
 use std::fs;
+use std::process::exit;
 
 fn main() {
 
-    let input_file = "run_URL_FILE.txt";
+    let args: Vec<String> = env::args().collect();
+   
+    println!("{}", args.len());
 
-    println!("In file {}", input_file);
+    let choice = &args[1];
+    let mut status = 0;
 
-    execute_file(input_file);
+    if choice == "install" {
+        status += execute_file("install.cmdln");
+    } else if choice == "build" {
+        status += execute_file("build.cmdln");
+    } else if choice == "test" {
+        status += execute_file("test.cmdln");
+    } else {
+        let mut string = String::new();
+        string.push_str("cp ");
+        string.push_str(&choice);
+        string.push_str(" URL_FILE");
+        status += execute_string(string); 
+        status += execute_file("URL_FILE.cmdln");
+    }
+
+    if status == 1 {
+        println!("something errored");
+    }
+
+    exit(status);
 }
 
-fn execute_file(input_file: &str) {
+fn execute_file(input_file: &str) -> i32 {
 
     let contents = fs::read_to_string(input_file)
         .expect("Should have been able to read file");
+
+    let mut status_sum = 0;
 
     let chars: Vec<char> = contents.chars().collect();
     let mut string = String::new();
@@ -36,7 +66,7 @@ fn execute_file(input_file: &str) {
 
         if c == '\n' {
             if !is_comment && has_chars {
-                println!("{}", string);
+                status_sum += execute_string(string);
             }
 
             string = String::new();
@@ -48,18 +78,39 @@ fn execute_file(input_file: &str) {
         //println!("{}", string);
     }
 
-    //println!("With text:\n{contents}");
-
-    /*Command::new("python3")
-            .arg("Metricizer.py")
-            .arg(input_file)
-            //.arg("ScorerModule.rs")
-            //.arg("Output.rs")
-            .spawn()
-            .expect("Metricizer failed to start");
-*/
+    return status_sum;
 }
-/*
-fn execute_string(string) {
+
+fn execute_string(string: String) -> i32 {
+    println!("About to run: {}", string);
     
-}*/
+    let mut iter = string.split_whitespace();
+
+    let mut command = Command::new(iter.next().unwrap());
+    
+    let mut opt = iter.next();
+    
+    while opt != None {
+        let arg = opt.unwrap();
+        println!("{}", arg);
+        command.arg(arg);
+        opt = iter.next();
+    }
+
+    let mut expect_str = String::new(); 
+    let broke = " broke";
+    expect_str.push_str(&string);
+    expect_str.push_str(&broke);
+    //println!("{}", expect_str);
+
+    let status = command.status()
+            .expect(&expect_str);
+    
+    println!("finished with {status}");
+
+    if status.success() {
+        return 1;
+    } else {
+        return 0;
+    }
+}

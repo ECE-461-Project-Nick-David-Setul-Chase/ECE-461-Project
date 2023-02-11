@@ -5,8 +5,9 @@ comp:
 	rustc run.rs
 
 run: comp
-	# temporarily just run. run will need commandline arguments
-	./run
+	./run build
+	./run practice_url_file.delete_me
+	./run test
 
 delete_everything:
 	rm -R API Brain Metricizer Output ReadWrite Scorer 
