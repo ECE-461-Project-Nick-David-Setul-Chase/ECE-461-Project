@@ -79,7 +79,7 @@ def metricizer(inputfile):
             rest_info = call_rest(url, api_token)
 
             if not gql_info:
-                print("API response failed. Please check token and WIFI connection.")
+                print("API response failed. Please check token and WIFI ccccconnection.")
                 data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
                 writeOutput(output_metric, data)
                 return 1
