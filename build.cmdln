@@ -4,5 +4,5 @@
 # (and actually any lines that include # in them at all won't run
 # so that may need to be adjusted if it ever ends up mattering)
 
-rustc ScorerModule.rs 
-rustc OutputModule.rs
+rustc OutputModule.rs 
+rustc ScorerModule.rs
