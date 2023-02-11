@@ -5,6 +5,6 @@
 # (and actually any lines that include # in them at all won't run
 # so that may need to be adjusted if it ever ends up mattering)
 
-ls
-# python3 Metricizer.py URL_FILE
-
+python3 Metricizer.py URL_FILE
+./ScorerModule
+./OutputModule

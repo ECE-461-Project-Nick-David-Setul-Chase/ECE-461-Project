@@ -5,7 +5,7 @@ pub const MIN_POSITIVE: f64 = 2.2250738585072014E-308f64;
 
 fn main() {
 
-    let lines = read_lines("test_score_data.txt".to_string());
+    let lines = read_lines("output_metric.txt".to_string());
     let mut full_metrics = Vec::new();
 
     for line in lines {
@@ -20,14 +20,14 @@ fn main() {
     for repo in 0..(full_scores.len() - 1) {
         for score in 0..6 {
             scores_output_file.as_ref().expect("failed to write").write(&full_scores[repo][score].as_bytes()).ok();
-            scores_output_file.as_ref().expect("failed to write").write(", ".as_bytes()).ok();
+            scores_output_file.as_ref().expect("failed to write").write(",".as_bytes()).ok();
         }
         scores_output_file.as_ref().expect("failed to write").write(&full_scores[repo][6].as_bytes()).ok();
         scores_output_file.as_ref().expect("failed to write").write("\n".as_bytes()).ok();
     }
     for score in 0..6 {
         scores_output_file.as_ref().expect("failed to write").write(&full_scores[full_scores.len()-1][score].as_bytes()).ok();
-        scores_output_file.as_ref().expect("failed to write").write(", ".as_bytes()).ok();
+        scores_output_file.as_ref().expect("failed to write").write(",".as_bytes()).ok();
     }
     scores_output_file.as_ref().expect("failed to write").write(&full_scores[full_scores.len()-1][6].as_bytes()).ok();
 
@@ -60,6 +60,9 @@ fn calculate_scores(full_metrics_strings: Vec<Vec<String>>) -> Vec<[String; 7]> 
         let mut correctness: f64 = issues_closed / (issues_total + MIN_POSITIVE); // prevent divide by 0
         let mut bus_factor: f64 = 1.0 - (1.0 / num_contributors);
         let mut responsive_maintainer: f64 = 1.0 / (weeks_since_last_issue + MIN_POSITIVE); // prevent divide by 0
+        if responsive_maintainer > 1.0 {
+            responsive_maintainer = 1.0;
+        }
         let mut license: f64 = license_correct;
 
         if readme_exists == -1.0 { // url error 1
@@ -76,6 +79,14 @@ fn calculate_scores(full_metrics_strings: Vec<Vec<String>>) -> Vec<[String; 7]> 
             bus_factor = -2.0;
             responsive_maintainer = -2.0;
             license = -2.0;
+        }
+
+        if readme_exists == -3.0 { // API error - something wrong for every url
+            ramp_up = -3.0;
+            correctness = -3.0;
+            bus_factor = -3.0;
+            responsive_maintainer = -3.0;
+            license = -3.0;
         }
 
         let total: f64 = 0.15 * ramp_up + 

@@ -5,7 +5,7 @@
 # so that may need to be adjusted if it ever ends up mattering)
 
 #idk what to put in here :)
-ls
-python3 big_error.py
-ls -l
-
+# curl --proto '=https' --tlsv1.3 https://sh.rustup.rs -sSf | sh
+# sudo dnf install python3
+pip3 install beautifulsoup4
+pip3 install requests
