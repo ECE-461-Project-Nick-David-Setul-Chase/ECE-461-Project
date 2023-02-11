@@ -51,9 +51,13 @@ def call_graphQL(url_, api_token):
     json_ = { 'query' : query_ } 
     headers_ = {'Authorization': 'token %s' % api_token}
     response = requests.post(url=url_graphQL, json=json_, headers=headers_)
-    data = json.loads(response.text)
-
-    filteredData = filterData(data)
+    
+    #Check for error
+    if(response.status_code >= 400):
+        filteredData = []
+    else:
+        data = json.loads(response.text)
+        filteredData = filterData(data)
     
     return filteredData
 
@@ -80,10 +84,10 @@ def filterData(data):
     issues_total = issues_closed + (data['data']['repository']['issuesOpen']['totalCount'])
     num_contribute = (data['data']['repository']['assignableUsers']['totalCount'])
 
-    license_correct = True
+    license_correct_readme = True
     find_license(readme)
 
-    data_list = [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
+    data_list = [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct_readme]
 
     return data_list
 
