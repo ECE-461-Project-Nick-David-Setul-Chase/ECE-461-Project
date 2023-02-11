@@ -17,7 +17,7 @@ def metricizer(inputfile):
     
     #Grab API token
     #api_token = os.environ.get("GITHUB_TOKEN") 
-    api_token = "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" #FOR TESTING ONLY
+    api_token = "AHHHHHHHH" #FOR TESTING ONLY
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
