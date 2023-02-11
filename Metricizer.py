@@ -17,7 +17,7 @@ def metricizer(inputfile):
     
     #Grab API token
     #api_token = os.environ.get("GITHUB_TOKEN") 
-    api_token = "AHHHHHHHH" #FOR TESTING ONLY
+    api_token = "Ahhhhhhhhh" #FOR TESTING ONLY
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
@@ -56,7 +56,8 @@ def metricizer(inputfile):
         #Write metrics to metric output
         #Format: url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
         #Example: https://github.com/user/repo,1,1,45,64,5,2,1
-        output_metric.write(url + "," + readme_exist + "," + doc_exist + "," + issues_closed + "," + issues_total + "," + num_contribute + "," + weeks_last_issue + "," + license_correct + "\n")
+        output_metric.write(str(url) + "," + str(readme_exist) + "," + str(doc_exist) + "," + str(issues_closed) + "," + str(issues_total) + "," + \
+            str(num_contribute) + "," + str(weeks_last_issue) + "," + str(license_correct) + "\n")
 
     #Closing all files
     file_ptr.close()

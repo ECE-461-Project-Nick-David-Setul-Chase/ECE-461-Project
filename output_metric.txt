@@ -1,0 +1,1 @@
+https://github.com/cloudinary/cloudinary_npm,True,False,23,30,175,5.571428571428571,True
