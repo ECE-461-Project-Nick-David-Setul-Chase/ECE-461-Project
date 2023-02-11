@@ -69,7 +69,7 @@ def metricizer(inputfile):
             else: 
                 domain = GITHUB
                 url = github_found
-                print(url)
+                #print(url)
 
         if (domain == GITHUB):
             #print("github.com module detected/found.")
@@ -92,7 +92,7 @@ def metricizer(inputfile):
             issues_closed = gql_info[2]
             issues_total1 = gql_info[3]
             issues_total2 = rest_info[3]
-            print("GraphQL issues: " + str(issues_total1) + " REST issues: " + str(issues_total2))
+            #print("GraphQL issues: " + str(issues_total1) + " REST issues: " + str(issues_total2))
             num_contribute = gql_info[4]
             weeks_last_issue = gql_info[5]
             license_correct = int(gql_info[6])
