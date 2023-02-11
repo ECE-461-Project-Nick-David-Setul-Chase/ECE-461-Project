@@ -56,14 +56,14 @@ def metricizer(inputfile):
         domain = getDomain(url)
         
         if (domain == OTHER):
-            print("Unsupported domain detected.\nModules must be supported on one of the following domains:\n  - github.com\n  - npmjs.com")
+            #print("Unsupported domain detected.\nModules must be supported on one of the following domains:\n  - github.com\n  - npmjs.com")
             writeOutput(output_metric, [url, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR])
             pass
         
         if (domain == NPMJS):
             github_found = npmjs_scrap(url)
             if not github_found:
-                print("Unsupported npmjs.com module.\nNo corresponding github.com module.")
+                #print("Unsupported npmjs.com module.\nNo corresponding github.com module.")
                 writeOutput(output_metric, [url, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR])
                 pass
             else: 
@@ -72,14 +72,14 @@ def metricizer(inputfile):
                 print(url)
 
         if (domain == GITHUB):
-            print("github.com module detected/found.")
+            #print("github.com module detected/found.")
 
             #Grab list from APIs --- [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
             gql_info = call_graphQL(url, api_token)
             rest_info = call_rest(url, api_token)
 
             if not gql_info:
-                print("API response failed. Please check token and WIFI ccccconnection.")
+                #print("API response failed. Please check token and WIFI ccccconnection.")
                 data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
                 writeOutput(output_metric, data)
                 return 1

@@ -101,7 +101,7 @@ def filterData(data):
     num_contribute = (data['data']['repository']['assignableUsers']['totalCount'])
     
     if (data['data']['repository']['licenseInfo']) is not None:
-        print("License: " + str(data['data']['repository']['licenseInfo']['key']))
+        #print("License: " + str(data['data']['repository']['licenseInfo']['key']))
         license_correct = find_license(data['data']['repository']['licenseInfo']['key']) or license_correct
 
     data_list = [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
