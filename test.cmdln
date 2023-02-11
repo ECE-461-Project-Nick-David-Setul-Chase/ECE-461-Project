@@ -5,5 +5,4 @@
 # so that may need to be adjusted if it ever ends up mattering)
 
 ls
-python3 Metricizer.py input_file.txt
 

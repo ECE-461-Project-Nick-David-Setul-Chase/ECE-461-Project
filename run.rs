@@ -18,28 +18,36 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
    
-    println!("{}", args.len());
-
-    let choice = &args[1];
-    let mut status = 0;
-
-    if choice == "install" {
-        status += execute_file("install.cmdln");
-    } else if choice == "build" {
-        status += execute_file("build.cmdln");
-    } else if choice == "test" {
-        status += execute_file("test.cmdln");
-    } else {
-        let mut string = String::new();
-        string.push_str("cp ");
-        string.push_str(&choice);
-        string.push_str(" URL_FILE");
-        status += execute_string(string); 
-        status += execute_file("URL_FILE.cmdln");
+    if args.len() != 2 {
+        println!("use is ./run _____"); // idk if this should be commented out
+        exit(1);
     }
 
-    if status == 1 {
-        println!("something errored");
+    let choice = &args[1];
+    let mut status;
+
+    if choice == "install" {
+        status = execute_file("install.cmdln");
+    } else if choice == "build" {
+        status = execute_file("build.cmdln");
+    } else if choice == "test" {
+        status = execute_file("test.cmdln");
+    } else {
+        if choice != "URL_FILE" {
+            let mut string = String::new();
+            string.push_str("cp ");
+            string.push_str(&choice);
+            string.push_str(" URL_FILE");
+            status = execute_string(string);
+            if status != 0 {
+                exit(status);
+            }
+        }
+        status = execute_file("URL_FILE.cmdln");
+    }
+
+    if status != 0 {
+        // println!("there was an error in execution"); // idk if this should be commented out
     }
 
     exit(status);
@@ -92,7 +100,7 @@ fn execute_string(string: String) -> i32 {
     
     while opt != None {
         let arg = opt.unwrap();
-        println!("{}", arg);
+        //println!("{}", arg);
         command.arg(arg);
         opt = iter.next();
     }
@@ -106,11 +114,9 @@ fn execute_string(string: String) -> i32 {
     let status = command.status()
             .expect(&expect_str);
     
-    println!("finished with {status}");
-
     if status.success() {
-        return 1;
-    } else {
         return 0;
+    } else {
+        return 1;
     }
 }
