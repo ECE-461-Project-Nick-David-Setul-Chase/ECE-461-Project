@@ -2,6 +2,8 @@ import sys
 import os
 import requests
 from bs4 import BeautifulSoup
+#import git
+#this is gitpython
 # From .env import load_.env load_dotenv()
 from GraphQL import call_graphQL
 from REST import call_rest
@@ -15,12 +17,13 @@ API_ERR = -3
 OTHER_ERR = -2
 NPMJS_ERR = -1
 
-
 #TO DO: Clone repo, web scrap
 
 def metricizer(inputfile):
 
     success = 0
+
+    path = os.getcwd()
     
     #print(sys.argv)
 
@@ -31,15 +34,15 @@ def metricizer(inputfile):
     #     print(line)
     
     #Grab API token
-    #api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
-    api_token = "tokennnnnn" #FOR TESTING ONLY
+    api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
+    #api_token = "blahhhhhhhhh" #FOR TESTING ONLY
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
 
     #Open input file
-    #file_ptr = open(sys.argv[1]) #THE REAL DEAL
-    file_ptr = open(inputfile) #FOR TESTING ONLY
+    file_ptr = open(sys.argv[1]) #THE REAL DEAL
+    #file_ptr = open(inputfile) #FOR TESTING ONLY
 
     #Read line by line in URL input file
     for url in file_ptr:
@@ -79,15 +82,12 @@ def metricizer(inputfile):
                 data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
                 writeOutput(output_metric, data)
                 return 1
-            else:
-                print(gql_info)
-                print(rest_info)
 
             #Find metric params
             readme_exist = int(gql_info[0])
             doc_exist = int(gql_info[1])
-            issues_closed = rest_info[2]
-            issues_total = rest_info[3]
+            issues_closed = gql_info[2]
+            issues_total = gql_info[3]
             num_contribute = gql_info[4]
             weeks_last_issue = gql_info[5]
             license_correct = int(gql_info[6])

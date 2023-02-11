@@ -2,6 +2,11 @@ import json
 import requests
 from datetime import datetime
 
+GNU_GPL = ["GPL-3.0-only", "GPL-3.0-or-later", "GPL-2.0-only", "GPL-2.0-or-later", "LGPL-2.1-only", "LGPL-2.1-or-later", "LGPL-3.0-only", "LGPL-3.0-or-later", \
+    "AGPL-3.0", "Apache-2.0", "Artistic-2.0", "ClArtistic", "BSL-1.0", "CECILL-2.0", "eCos-2.0", "ECL-2.0", "EFL-2.0", "EUDatagrid", "BSD-2-Clause-FreeBSD", \
+        "FTL", "HPND", "iMatix", "Imlib2", "IJG", "Intel", "ISC", "MPL-2.0", "NCSA", "Python-2.0.1", "Python-2.1.1", "Ruby", "SGI-B-2.0", "StandardML-NJ", \
+            "SMLNJ", "Unicode-DFS-2015", "Unicode-DFS-2016", "UPL-1.0", "Unlicense", "Vim", "WTFPL", "X11", "MIT", "XFree86-1.1", "Zlib", "ZPL-2.0", "ZPL-2.1"]
+
 #Arguments: Source URL, API token
 #Returns: Dictionary starting with 'data' key
 def call_graphQL(url_, api_token):
@@ -44,6 +49,9 @@ def call_graphQL(url_, api_token):
                 text
                 }
             }
+            licenseInfo{
+                key
+            }
             hasWikiEnabled
         }
     }'''
@@ -62,7 +70,9 @@ def call_graphQL(url_, api_token):
     return filteredData
 
 def filterData(data):
-  
+    
+    license_correct = 0
+
     #Finding date since last issue opened
     date_raw = (data['data']['repository']['issueLastOpened']['nodes'])[0]['createdAt']
     datetime_now = datetime.now()
@@ -77,26 +87,34 @@ def filterData(data):
     else:
         readme = (data['data']['repository']['object']['text']) 
         readme_exist = True
+        license_correct = find_license(readme)
 
     #Grabbing other metrics
     doc_exist = (data['data']['repository']['hasWikiEnabled'])
     issues_closed = (data['data']['repository']['issuesClosed']['totalCount'])
     issues_total = issues_closed + (data['data']['repository']['issuesOpen']['totalCount'])
     num_contribute = (data['data']['repository']['assignableUsers']['totalCount'])
+    
+    if (data['data']['repository']['licenseInfo']) is not None:
+        print("License: " + str(data['data']['repository']['licenseInfo']['key']))
+        license_correct = find_license(data['data']['repository']['licenseInfo']['key']) or license_correct
 
-    license_correct_readme = True
-    find_license(readme)
-
-    data_list = [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct_readme]
+    data_list = [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
     return data_list
 
-def find_license(readme):
-    #print('Look for license')
-    #print(readme)
+def find_license(string):
     
-    index = readme.find('MIT')
-    print('License found at index: ' + str(index))
+    for license in GNU_GPL:
+        indexLow = string.find(license.lower())
+        indexUp = string.find(license.upper())
+        
+        if indexLow != -1 or indexUp != -1: 
+            #print('License found: ' + license)
+            return True
+    
+    return False
+        
 
 
 ######################################################################
