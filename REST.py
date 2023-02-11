@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime 
 
 #Input: url = str, api_token = str
 #Output: data = str
@@ -116,7 +117,7 @@ def call_rest(url, api_token):
             else:
                 doc_exist = False
 
-        return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
+        return [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
     except Exception as e:
         print(e)
