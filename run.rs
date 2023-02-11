@@ -19,7 +19,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
    
     if args.len() != 2 {
-        println!("use is ./run _____"); // idk if this should be commented out
+        // println!("use is ./run _____");
         exit(1);
     }
 
@@ -47,7 +47,7 @@ fn main() {
     }
 
     if status != 0 {
-        // println!("there was an error in execution"); // idk if this should be commented out
+        // println!("there was an error in execution"); 
     }
 
     exit(status);
@@ -90,7 +90,7 @@ fn execute_file(input_file: &str) -> i32 {
 }
 
 fn execute_string(string: String) -> i32 {
-    println!("About to run: {}", string);
+    // println!("About to run: {}", string);
     
     let mut iter = string.split_whitespace();
 
