@@ -108,8 +108,6 @@ def metricizer(inputfile):
     file_ptr.close()
     output_metric.close()
 
-    print("__ Complete __")
-
     return 0 
 
 
