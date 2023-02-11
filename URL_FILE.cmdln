@@ -1,0 +1,10 @@
+
+# list here commands to run when the user runs './run URL_FILE'
+# use URL_FILE as the name of the file that holds the urls in any commands.
+# any lines that start with # or are blank won't run. 
+# (and actually any lines that include # in them at all won't run
+# so that may need to be adjusted if it ever ends up mattering)
+
+ls
+# python3 Metricizer.py URL_FILE
+
