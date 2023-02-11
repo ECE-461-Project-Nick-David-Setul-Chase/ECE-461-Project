@@ -51,7 +51,7 @@ def metricizer(inputfile):
         #path = createDir(url)
         #print(path)
 
-        print(".")
+        print(".", end = " ")
 
         url = url.strip()
         
@@ -107,6 +107,8 @@ def metricizer(inputfile):
     #Closing all files
     file_ptr.close()
     output_metric.close()
+
+    print(" Complete.")
 
     return 0 
 
