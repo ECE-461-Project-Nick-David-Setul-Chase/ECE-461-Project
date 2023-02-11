@@ -28,6 +28,15 @@ def Main(inputfile):
 
     #Read line by line in URL input file
     for url in file_ptr:
+        
+        #if url is not githup or npm
+            #error
+        #else if it is npm
+            #web scrap for github
+
+        #if git hub .
+            #yay
+        
         #Grab dictionary from graphQL API
         gql_info = call_graphQL(url, api_token)
         
