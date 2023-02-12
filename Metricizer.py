@@ -27,19 +27,15 @@ NPMJS_ERR = -1
 def metricizer(inputfile):
 
     success = 0
-    
-    #print(sys.argv)
 
-    #if len(sys.argv) != 2:
-    #    print("ERROR. Proper use: python3 Metricizer/Metricizer url-file.txt")
+    if len(sys.argv) != 2:
+        print("ERROR. Proper use: python3 Metricizer/Metricizer url-file.txt")
     #    exit(1)
-    # for line in sys.stdin:
-    #     print(line)
     
     #Grab API token
-    api_token = os.environ.get("GITHUB_TOKEN") #THE REAL DEAL
-    #api_token = "hhhhhhhhhhhh" #FOR TESTING ONLY
-    #print(api_token)
+    api_token = os.environ.get("GITHUB_TOKEN") 
+    log_level = os.environ.get("LOG_LEVEL") 
+    log_file = os.environ.get("LOG_FILE") 
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
