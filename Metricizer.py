@@ -103,6 +103,11 @@ def metricizer(inputfile):
 
             path = createDir(url)
             Repo.clone_from(url, path)
+
+            print("_________")
+            print(gql_info)
+            print(rest_info)
+            print("_________")
             
             #Find metric params
             readme_exist = int(gql_info[0])
