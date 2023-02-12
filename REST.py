@@ -28,29 +28,31 @@ def call_rest(url, api_token):
         # calculate total issues, closed issues, and weeks since last issue
         # get all issues
         url_issues = rest_url + "/issues"
-        query_issues = {"state" : "all"}
-        output_issues = requests.get(url_issues, headers=headers, params=query_issues) #data=json.dumps(query)
-        data_issues = output_issues.json()
+        query_issues_closed = {"state" : "closed"}
+        output_issues_closed = requests.get(url_issues, headers=headers, params=query_issues_closed)
+        query_issues_open = {"state" : "open"}
+        output_issues_open = requests.get(url_issues, headers=headers, params=query_issues_open)
+        data_issues_closed = output_issues_closed.json()
+        data_issues_open = output_issues_open.json()
         #print(data_issues)
         try:
             # if not found
-            if data_issues['message']:
+            if data_issues_open['message'] | data_issues_closed['message']:
                 issues_total = 0
                 issues_closed = 0
                 weeks_last_issue = 0
         except:
             # get total amount of issues
-            issues_total = len(data_issues)
+            issues_total = len(data_issues_open) + len(data_issues_closed)
 
             # find date of last issue and get weeks since, also get closed issues
-            issues_closed = 0
+            issues_closed = len(data_issues_closed)
             weeks_last_issue = -1
-            for issue in data_issues:
-                # increment closed issues
-                if issue['state'] == 'closed':
-                    issues_closed += 1
+            for issue in (data_issues_closed + data_issues_open):
+                #print(issue)
+
                 # find weeks since last issue, date format: 'created_at': '2020-04-20T22:16:33Z'
-                weeks_this_issue = abs(datetime.now() - datetime.fromisoformat( issue['created_at'].replace('Z', ''))).days//7
+                weeks_this_issue = abs(datetime.now() - datetime.fromisoformat(issue['created_at'].replace('Z', ''))).days//7
                 # take care of initial value
                 if weeks_last_issue == -1:
                     weeks_last_issue = weeks_this_issue
@@ -58,6 +60,9 @@ def call_rest(url, api_token):
                 else:
                     if weeks_this_issue < weeks_last_issue:
                         weeks_last_issue = weeks_this_issue
+            # fail safe if no issues
+            if weeks_last_issue == -1:
+                weeks_last_issue = 0
 
 
         # get license DOES NOT WORK
@@ -68,12 +73,12 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_license['message']:
-                license_correct_readme = False
+                license_correct = False
         except:
-            if data_license['license'] == "GNU...": # replace 'GNU...' with GNU license returned
-                license_correct_readme = True
+            if data_license['license'] == "GNU...":
+                license_correct = True
             else:
-                license_correct_readme = False
+                license_correct = False
 
         # get readme
         url_readme = rest_url + "/readme"
@@ -83,7 +88,7 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_readme['message']:
-                license_correct_readme = False
+                license_correct = False
         except:
             if data_readme['name']:
                 readme_exist = True
@@ -117,7 +122,7 @@ def call_rest(url, api_token):
             else:
                 doc_exist = False
 
-        return [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct_readme]
+        return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
     except Exception as e:
         print(e)
