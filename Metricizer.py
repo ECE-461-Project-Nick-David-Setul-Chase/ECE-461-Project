@@ -48,8 +48,8 @@ def metricizer(inputfile):
     #Read line by line in URL input file
     for url in file_ptr:
         
-        #path = createDir(url)
-        #print(path)
+        path = createDir(url)
+        print(path)
 
         print(".")
 
@@ -86,7 +86,7 @@ def metricizer(inputfile):
                 writeOutput(output_metric, data)
                 return 1
 
-            #Repo.clone_from(url, path)
+            Repo.clone_from(url, path)
             
             #Find metric params
             readme_exist = int(gql_info[0])
