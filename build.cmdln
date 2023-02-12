@@ -6,3 +6,4 @@
 
 rustc OutputModule.rs 
 rustc ScorerModule.rs
+rustc TesterModule.rs

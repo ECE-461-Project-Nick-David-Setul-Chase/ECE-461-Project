@@ -1,0 +1,3 @@
+python3 Metricizer.py testurls.txt
+./ScorerModule
+./TesterModule

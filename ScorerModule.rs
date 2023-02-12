@@ -31,6 +31,7 @@ fn main() {
     }
     scores_output_file.as_ref().expect("failed to write").write(&full_scores[full_scores.len()-1][6].as_bytes()).ok();
 
+    //drop(scores_output_file);
 }
 
 fn read_lines(filename: String) -> io::Lines<BufReader<File>> {
