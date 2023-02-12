@@ -102,7 +102,7 @@ def metricizer(inputfile):
                 writeLog(log_output, log_level, str(datetime.now()) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
                 return 1
 
-            path = createDir(url)
+            path = createDir(url, log_output, log_level)
             Repo.clone_from(url, path)
             
             #Find metric params
@@ -163,7 +163,7 @@ def npmjs_scrap(url):
     else:
         return(str(soupTime.find("a", {"aria-labelledby":"repository repository-link"})['href']))
 
-def createDir(url_):
+def createDir(url_, log_output, log_level):
     #Grabbing repo name
     url_useful = url_[19:]
     repo_index = url_useful.find('/')
@@ -174,6 +174,7 @@ def createDir(url_):
     path = os.path.join(parent_dir, repo)
     if(os.path.isdir(path)):
         shutil.rmtree(path)
+        writeLog(log_output, log_level, str(datetime.now()) + " - " + "Deleting Directory: " + str(path), DEBUG)
     os.mkdir(path)
 
     return path
