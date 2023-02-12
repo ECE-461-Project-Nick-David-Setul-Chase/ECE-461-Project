@@ -12,6 +12,14 @@ fn main() {
         full_scores.push(repo_scores);
     }
 
+    for i in 0..full_scores.len() {
+        for j in 0..full_scores.len() - i - 1 {
+            if full_scores[j + 1][6] > full_scores[j][6] {
+                full_scores.swap(j, j + 1);
+            }
+        }
+    }
+
     for repo_scores in full_scores {
 
         let repo_url: &str = &repo_scores[0];
@@ -23,25 +31,17 @@ fn main() {
         let total: f64 = repo_scores[6].parse().unwrap();
 
         if ramp_up == -1.0 { // url error 1
-            println!("Repository URL: {}", repo_url);
-            println!("    URL not supported - error 1");
+            println!("Repository URL: {} is not supported - no GitHub link found on NPM page", repo_url);
         }
-        if ramp_up == -2.0 { // url error 1
-            println!("Repository URL: {}", repo_url);
-            println!("    URL not supported - error 2");
+        if ramp_up == -2.0 { // url error 2
+            println!("Repository URL: {} is not supported - url is not NPM or GitHub", repo_url);
         }
         if ramp_up == -3.0 { // api error
             println!("API error - could not access repositories.");
             exit(1);
         }
         else {
-            println!("Repository URL: {}", repo_url);
-            println!("    NetScore: {}", total);
-            println!("        RampUp: {}", ramp_up);
-            println!("        Correctness: {}", correctness);
-            println!("        BusFactor: {}", bus_factor);
-            println!("        ResponsiveMaintainer: {}", responsive_maintainer);
-            println!("        License: {}", license);
+            println!("{{\"URL\":\"{}\", \"NET_SCORE\":{}, \"RAMP_UP_SCORE\":{}, \"CORRECTNESS_SCORE\":{}, \"BUS_FACTOR_SCORE\":{}, \"RESPONSIVE_MAINTAINER_SCORE\":{}, \"LICENSE_SCORE\":{}}}", repo_url, total, ramp_up, correctness, bus_factor, responsive_maintainer, license);
         }
     }
 
