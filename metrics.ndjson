@@ -1,0 +1,5 @@
+{"metric":"RAMP_UP_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
+{"metric":"CORRECTNESS_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
+{"metric":"BUS_FACTOR_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
+{"metric":"RESPONSIVE_MAINTAINER_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
+{"metric":"LICENSE_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
