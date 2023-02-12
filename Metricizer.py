@@ -122,13 +122,12 @@ def metricizer(inputfile):
             writeOutput(output_metric, data) 
 
     writeLog(log_output, log_level, str(datetime.now) + " - " + "All Data Written", INFO)
+    writeLog(log_output, log_level, str(datetime.now) + " - " + "Calculating Metrics & Total Score", INFO)
     
     #Closing all files
     file_ptr.close()
     output_metric.close()
     log_output.close()
-
-    writeLog(log_output, log_level, str(datetime.now) + " - " + "Calculating Metrics & Total Score", INFO)
 
     return success 
 
@@ -160,7 +159,7 @@ def writeLog(file_ptr, log_level, string, access_level):
 def npmjs_scrap(url):
     req = requests.get(url)
     soupTime = BeautifulSoup(req.text, "html.parser")
-    if(soupTime.find("a", {"aria-labelledby":"repository repository-link"})['href']) is None:
+    if(soupTime.find("a", {"aria-labelledby":"repository repository-link"})) is None:
         return("")
     else:
         return(str(soupTime.find("a", {"aria-labelledby":"repository repository-link"})['href']))
