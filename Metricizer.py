@@ -50,10 +50,8 @@ def metricizer(inputfile):
 
     #Read line by line in URL input file
     for url in file_ptr:
-        
-        
 
-        print(".")
+        print(str(url) + "...")
 
         url = url.strip()
         
@@ -89,10 +87,7 @@ def metricizer(inputfile):
                 return 1
 
             path = createDir(url)
-            print(path)
-            print("________________")
             Repo.clone_from(url, path)
-            print("________________")
             
             #Find metric params
             readme_exist = int(gql_info[0])
@@ -147,24 +142,14 @@ def npmjs_scrap(url):
 
 def createDir(url_):
     #Grabbing repo name
-    #print("=================")
     url_useful = url_[19:]
-    #print(url_)
-    #print(url_useful)
     repo_index = url_useful.find('/')
     repo = (url_useful[(repo_index + 1) :]).strip()
-    #print(repo)
 
     #Create new directory
     parent_dir = os.getcwd()
     path = os.path.join(parent_dir, repo)
-    
-    #print(path)
-    #print("=================")
     os.mkdir(path)
-    #print("MADE SUCCESS")
-    #print(os.getcwd())
-    #print("=================")
 
     return path
 
