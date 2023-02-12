@@ -153,7 +153,9 @@ def createDir(url_):
     #Create new directory
     parent_dir = os.getcwd()
     path = os.path.join(parent_dir, repo)
+    print("=================")
     print(path)
+    print("=================")
     os.mkdir(path)
 
     return path
