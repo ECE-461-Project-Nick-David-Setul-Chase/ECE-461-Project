@@ -3,7 +3,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 os.environ["GIT_PYTHON_REFRESH"] = "quiet"
-#os.environ["GIT_PYTHON_GIT_EXECUTABLE"] = os.getcwd() 
+os.environ["GIT_PYTHON_GIT_EXECUTABLE"] = "/usr/lib/git-core" 
 
 import git
 from git.repo.base import Repo
