@@ -103,24 +103,17 @@ def metricizer(inputfile):
 
             path = createDir(url)
             Repo.clone_from(url, path)
-
-            print("_________")
-            print(gql_info)
-            print(rest_info)
-            print("_________")
             
             #Find metric params
             readme_exist = int(gql_info[0])
             doc_exist = int(gql_info[1])
             issues_closed = gql_info[2]
-            issues_total1 = gql_info[3]
-            issues_total2 = rest_info[3]
-            #print("GraphQL issues: " + str(issues_total1) + " REST issues: " + str(issues_total2))
+            issues_total = rest_info[3]
             num_contribute = gql_info[4]
             weeks_last_issue = gql_info[5]
             license_correct = int(gql_info[6])
 
-            data = [url, readme_exist, doc_exist, issues_closed, issues_total1, num_contribute, weeks_last_issue, license_correct]
+            data = [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
             writeLog(log_output, log_level, str(datetime.now) + " - " + "Response Data Saved", DEBUG)
 
