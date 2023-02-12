@@ -91,7 +91,7 @@ def metricizer(inputfile):
             path = createDir(url)
             print(path)
             print("________________")
-            #Repo.clone_from(url, path)
+            Repo.clone_from(url, path)
             print("________________")
             
             #Find metric params
@@ -147,20 +147,20 @@ def npmjs_scrap(url):
 
 def createDir(url_):
     #Grabbing repo name
-    print("=================")
+    #print("=================")
     url_useful = url_[19:]
-    print(url_)
-    print(url_useful)
+    #print(url_)
+    #print(url_useful)
     repo_index = url_useful.find('/')
     repo = (url_useful[(repo_index + 1) :]).strip()
-    print(repo)
+    #print(repo)
 
     #Create new directory
     parent_dir = os.getcwd()
     path = os.path.join(parent_dir, repo)
     
-    print(path)
-    print("=================")
+    #print(path)
+    #print("=================")
     os.mkdir(path)
     #print("MADE SUCCESS")
     #print(os.getcwd())
