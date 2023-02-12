@@ -27,29 +27,26 @@ def call_rest(url, api_token):
     try:
         # calculate total issues, closed issues, and weeks since last issue
         # get all issues
-        url_issues = rest_url + "/issues"
-        query_issues_closed = {"state" : "closed"}
-        output_issues_closed = requests.get(url_issues, headers=headers, params=query_issues_closed)
-        query_issues_open = {"state" : "open"}
-        output_issues_open = requests.get(url_issues, headers=headers, params=query_issues_open)
-        data_issues_closed = output_issues_closed.json()
-        data_issues_open = output_issues_open.json()
+        url_issues = "https://api.github.com/search/issues?q=is:issue%20repo:" + user + "/" + repo
+        output_issues = requests.get(url_issues, headers=headers)
+        data_issues = output_issues.json()
         #print(data_issues)
-        try:
-            # if not found
-            if data_issues_open['message'] | data_issues_closed['message']:
-                issues_total = 0
-                issues_closed = 0
-                weeks_last_issue = 0
-        except:
-            # get total amount of issues
-            issues_total = len(data_issues_open) + len(data_issues_closed)
 
+        if data_issues['incomplete_results']:
+            issues_total = 0
+            issues_closed = 0
+            weeks_last_issue = 0
+        else:
+            # get total amount of issues
+            issues_total = data_issues["total_count"]
             # find date of last issue and get weeks since, also get closed issues
-            issues_closed = len(data_issues_closed)
+            issues_closed = 0
             weeks_last_issue = -1
-            for issue in (data_issues_closed + data_issues_open):
+            for issue in data_issues["items"]:
                 #print(issue)
+                # find closed issues
+                if issue['state'] == "closed":
+                    issues_closed += 1
 
                 # find weeks since last issue, date format: 'created_at': '2020-04-20T22:16:33Z'
                 weeks_this_issue = abs(datetime.now() - datetime.fromisoformat(issue['created_at'].replace('Z', ''))).days//7
@@ -73,7 +70,8 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_license['message']:
-                license_correct = False
+                pass
+            license_correct = False
         except:
             if data_license['license'] == "GNU...":
                 license_correct = True
@@ -88,9 +86,10 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_readme['message']:
-                license_correct = False
+                pass
+            readme_exist = False
         except:
-            if data_readme['name']:
+            if data_readme['name'] == 'README.md':
                 readme_exist = True
             else:
                 readme_exist = False
@@ -103,7 +102,8 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_contributors['message']:
-                num_contribute = 0
+                pass
+            num_contribute = 0
         except:
             num_contribute = len(data_contributors)
 
@@ -115,7 +115,8 @@ def call_rest(url, api_token):
         try:
             # if not found
             if data_wiki['message']:
-                doc_exist = False
+                pass
+            doc_exist = False
         except:
             if data_wiki['wiki']:
                 doc_exist = True
