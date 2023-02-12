@@ -3,6 +3,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import shutil
 os.environ["GIT_PYTHON_REFRESH"] = "quiet"
 os.environ["GIT_PYTHON_GIT_EXECUTABLE"] = "/usr/lib/git-core" 
 
@@ -171,6 +172,8 @@ def createDir(url_):
     #Create new directory
     parent_dir = os.getcwd()
     path = os.path.join(parent_dir, repo)
+    if(os.path.isdir(path)):
+        shutil.rmtree(path)
     os.mkdir(path)
 
     return path
