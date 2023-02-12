@@ -90,7 +90,7 @@ def metricizer(inputfile):
                 return 1
 
             print("________________")
-            Repo.clone_from(url, path)
+            #Repo.clone_from(url, path)
             print("________________")
             
             #Find metric params
@@ -158,6 +158,7 @@ def createDir(url_):
     print("=================")
     os.mkdir(path)
     print("MADE SUCCESS")
+    print(os.getcwd())
     print("=================")
 
     return path
