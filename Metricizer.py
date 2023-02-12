@@ -38,7 +38,7 @@ def metricizer(inputfile):
     
     #Grab API token
     api_token = os.environ.get("GITHUB_TOKEN") 
-    log_level = os.environ.get("LOG_LEVEL") 
+    log_level = int(os.environ.get("LOG_LEVEL")) 
     log_file = os.environ.get("LOG_FILE") 
 
     #Creating metric output file
@@ -130,7 +130,7 @@ def metricizer(inputfile):
 
     writeLog(log_output, log_level, str(datetime.now) + " - " + "Calculating Metrics & Total Score", INFO)
 
-    return 0 
+    return success 
 
 
 #Determine module source domain
