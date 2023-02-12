@@ -123,5 +123,5 @@ def call_rest(url, api_token):
         return [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
     except Exception as e:
-        print(e)
+        #print(e)
         return []
