@@ -2,6 +2,7 @@ import sys
 import os
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
 os.environ["GIT_PYTHON_REFRESH"] = "quiet"
 os.environ["GIT_PYTHON_GIT_EXECUTABLE"] = "/usr/lib/git-core" 
 
@@ -22,14 +23,17 @@ API_ERR = -3
 OTHER_ERR = -2
 NPMJS_ERR = -1
 
+INFO = 1
+DEBUG = 2
+
 #TO DO: Clone repo, web scrap
 
 def metricizer(inputfile):
 
     success = 0
 
-    if len(sys.argv) != 2:
-        print("ERROR. Proper use: python3 Metricizer/Metricizer url-file.txt")
+    #if len(sys.argv) != 2:
+    #    print("ERROR. Proper use: python3 Metricizer/Metricizer url-file.txt")
     #    exit(1)
     
     #Grab API token
@@ -39,15 +43,20 @@ def metricizer(inputfile):
 
     #Creating metric output file
     output_metric = open('output_metric.txt', 'w')
+    log_output = open(log_file, 'w')
+
+    writeLog(log_output, log_level, str(datetime.now) + " - " + "System Start", INFO)
 
     #Open input file
     file_ptr = open(sys.argv[1]) #THE REAL DEAL
-    #file_ptr = open(inputfile) #FOR TESTING ONLY
 
     #Read line by line in URL input file
+    writeLog(log_output, log_level, str(datetime.now) + " - " + "Processing URL Inputs", INFO)
     for url in file_ptr:
 
         url = url.strip()
+
+        writeLog(log_output, log_level, str(datetime.now) + " - " + "Analyzing " + url, DEBUG)
         
         print(str(url) + "...")
         
@@ -56,6 +65,7 @@ def metricizer(inputfile):
         if (domain == OTHER):
             #print("Unsupported domain detected.\nModules must be supported on one of the following domains:\n  - github.com\n  - npmjs.com")
             writeOutput(output_metric, [url, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR])
+            writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsupported URL Input", DEBUG)
             pass
         
         if (domain == NPMJS):
@@ -63,6 +73,7 @@ def metricizer(inputfile):
             if not github_found:
                 #print("Unsupported npmjs.com module.\nNo corresponding github.com module.")
                 writeOutput(output_metric, [url, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR])
+                writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsupported URL Input", DEBUG)
                 pass
             else: 
                 domain = GITHUB
@@ -73,6 +84,7 @@ def metricizer(inputfile):
             #print("github.com module detected/found.")
 
             #Grab list from APIs --- [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
+            writeLog(log_output, log_level, str(datetime.now) + " - " + "Calling GraphQL API & REST API", DEBUG)
             gql_info = call_graphQL(url, api_token)
             rest_info = call_rest(url, api_token)
 
@@ -80,6 +92,13 @@ def metricizer(inputfile):
                 #print("API response failed. Please check token and WIFI ccccconnection.")
                 data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
                 writeOutput(output_metric, data)
+                writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
+                return 1
+            if not rest_info:
+                #print("API response failed. Please check token and WIFI ccccconnection.")
+                data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
+                writeOutput(output_metric, data)
+                writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
                 return 1
 
             path = createDir(url)
@@ -98,12 +117,18 @@ def metricizer(inputfile):
 
             data = [url, readme_exist, doc_exist, issues_closed, issues_total1, num_contribute, weeks_last_issue, license_correct]
 
+            writeLog(log_output, log_level, str(datetime.now) + " - " + "Response Data Saved", DEBUG)
+
             writeOutput(output_metric, data) 
 
-
+    writeLog(log_output, log_level, str(datetime.now) + " - " + "All Data Written", INFO)
+    
     #Closing all files
     file_ptr.close()
     output_metric.close()
+    log_output.close()
+
+    writeLog(log_output, log_level, str(datetime.now) + " - " + "Calculating Metrics & Total Score", INFO)
 
     return 0 
 
@@ -111,9 +136,9 @@ def metricizer(inputfile):
 #Determine module source domain
 def getDomain(url):
     domain = OTHER
-    if(url.find("github.com") != -1):
+    if(url.find("https://github.com") != -1):
         domain = GITHUB
-    elif(url.find("npmjs.com") != -1):
+    elif(url.find("https://www.npmjs.com") != -1):
         domain = NPMJS
     return domain
 
@@ -124,6 +149,11 @@ def getDomain(url):
 def writeOutput(output_metric, data):
     output_metric.write(str(data[0]) + "," + str(data[1]) + "," + str(data[2]) + "," + str(data[3]) + "," + str(data[4]) + "," + \
         str(data[5]) + "," + str(data[6]) + "," + str(data[7]) + "\n")
+
+
+def writeLog(file_ptr, log_level, string, access_level):
+    if(access_level <= log_level):
+        file_ptr.write(string)
 
 
 #Web scrapping NPMJS to find GitHub repo
