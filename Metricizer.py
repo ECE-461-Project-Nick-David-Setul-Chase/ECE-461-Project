@@ -150,7 +150,7 @@ def writeOutput(output_metric, data):
 
 def writeLog(file_ptr, log_level, string, access_level):
     if(access_level <= log_level):
-        file_ptr.write(string)
+        file_ptr.write(string + '\n')
 
 
 #Web scrapping NPMJS to find GitHub repo
