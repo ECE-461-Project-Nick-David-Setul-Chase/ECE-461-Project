@@ -51,8 +51,7 @@ def metricizer(inputfile):
     #Read line by line in URL input file
     for url in file_ptr:
         
-        path = createDir(url)
-        print(path)
+        
 
         print(".")
 
@@ -89,6 +88,8 @@ def metricizer(inputfile):
                 writeOutput(output_metric, data)
                 return 1
 
+            path = createDir(url)
+            print(path)
             print("________________")
             #Repo.clone_from(url, path)
             print("________________")
