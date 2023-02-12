@@ -51,9 +51,9 @@ def metricizer(inputfile):
     #Read line by line in URL input file
     for url in file_ptr:
 
-        print(str(url) + "...")
-
         url = url.strip()
+        
+        print(str(url) + "...")
         
         domain = getDomain(url)
         
