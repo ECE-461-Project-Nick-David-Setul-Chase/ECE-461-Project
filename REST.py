@@ -1,9 +1,8 @@
 import requests
-import json
 from datetime import datetime 
 
-#Input: url = str, api_token = str
-#Output: data = str
+# Input: url = str, api_token = str
+# Output: data = [url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct]
 def call_rest(url, api_token):
 
     # authorization token
@@ -21,8 +20,6 @@ def call_rest(url, api_token):
 
     # create url for rest api
     rest_url = 'https://api.github.com/repos/' + user + '/' + repo
-
-    # output format: url,readme_exist,doc_exist,issues_closed,issues_total,num_contribute,weeks_last_issue,license_correct
 
     try:
         # calculate total issues, closed issues, and weeks since last issue
