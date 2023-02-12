@@ -1,5 +1,0 @@
-https://github.com/cloudinary/cloudinary_npm,1,0,241,252,175,5.714285714285714,1
-https://github.com/expressjs/express,0,1,3608,3727,66,0.42857142857142855,1
-https://github.com/nullivex/nodist,1,0,153,193,6,37.285714285714285,1
-https://github.com/lodash/lodash,1,1,3784,4095,9,0.14285714285714285,1
-https://github.com/browserify/browserify,0,1,1139,1492,41,0.2857142857142857,1
