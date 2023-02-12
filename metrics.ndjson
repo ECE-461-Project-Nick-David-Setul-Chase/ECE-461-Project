@@ -1,6 +1,6 @@
 {"metric":"RAMP_UP_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
 {"metric":"CORRECTNESS_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
-{"metric":"CORRECTNESS_SCORE", "api":"REST", "filepath":"REST.py", "line":31}
+{"metric":"CORRECTNESS_SCORE", "api":"REST", "filepath":"REST.py", "line":28}
 {"metric":"BUS_FACTOR_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
 {"metric":"RESPONSIVE_MAINTAINER_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
 {"metric":"LICENSE_SCORE", "api":"GraphQL", "filepath":"GraphQL.py", "line":61}
