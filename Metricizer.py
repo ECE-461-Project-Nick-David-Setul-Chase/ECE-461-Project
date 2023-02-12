@@ -45,18 +45,18 @@ def metricizer(inputfile):
     output_metric = open('output_metric.txt', 'w')
     log_output = open(log_file, 'w')
 
-    writeLog(log_output, log_level, str(datetime.now) + " - " + "System Start", INFO)
+    writeLog(log_output, log_level, str(datetime.now()) + " - " + "System Start", INFO)
 
     #Open input file
     file_ptr = open(sys.argv[1]) #THE REAL DEAL
 
     #Read line by line in URL input file
-    writeLog(log_output, log_level, str(datetime.now) + " - " + "Processing URL Inputs", INFO)
+    writeLog(log_output, log_level, str(datetime.now()) + " - " + "Processing URL Inputs", INFO)
     for url in file_ptr:
 
         url = url.strip()
 
-        writeLog(log_output, log_level, str(datetime.now) + " - " + "Analyzing " + url, DEBUG)
+        writeLog(log_output, log_level, str(datetime.now()) + " - " + "Analyzing " + url, DEBUG)
         
         print(str(url) + "...")
         
@@ -65,7 +65,7 @@ def metricizer(inputfile):
         if (domain == OTHER):
             #print("Unsupported domain detected.\nModules must be supported on one of the following domains:\n  - github.com\n  - npmjs.com")
             writeOutput(output_metric, [url, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR, OTHER_ERR])
-            writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsupported URL Input", DEBUG)
+            writeLog(log_output, log_level, str(datetime.now()) + " - " + "Unsupported URL Input", DEBUG)
             pass
         
         if (domain == NPMJS):
@@ -73,7 +73,7 @@ def metricizer(inputfile):
             if not github_found:
                 #print("Unsupported npmjs.com module.\nNo corresponding github.com module.")
                 writeOutput(output_metric, [url, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR, NPMJS_ERR])
-                writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsupported URL Input", DEBUG)
+                writeLog(log_output, log_level, str(datetime.now()) + " - " + "Unsupported URL Input", DEBUG)
                 pass
             else: 
                 domain = GITHUB
@@ -84,7 +84,7 @@ def metricizer(inputfile):
             #print("github.com module detected/found.")
 
             #Grab list from APIs --- [readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
-            writeLog(log_output, log_level, str(datetime.now) + " - " + "Calling GraphQL API & REST API", DEBUG)
+            writeLog(log_output, log_level, str(datetime.now()) + " - " + "Calling GraphQL API & REST API", DEBUG)
             gql_info = call_graphQL(url, api_token)
             rest_info = call_rest(url, api_token)
 
@@ -92,13 +92,13 @@ def metricizer(inputfile):
                 #print("API response failed. Please check token and WIFI ccccconnection.")
                 data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
                 writeOutput(output_metric, data)
-                writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
+                writeLog(log_output, log_level, str(datetime.now()) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
                 return 1
             if not rest_info:
                 #print("API response failed. Please check token and WIFI ccccconnection.")
                 data = [API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR, API_ERR]
                 writeOutput(output_metric, data)
-                writeLog(log_output, log_level, str(datetime.now) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
+                writeLog(log_output, log_level, str(datetime.now()) + " - " + "Unsuccessful GraphQL API Call", DEBUG)
                 return 1
 
             path = createDir(url)
@@ -115,12 +115,12 @@ def metricizer(inputfile):
 
             data = [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
-            writeLog(log_output, log_level, str(datetime.now) + " - " + "Response Data Saved", DEBUG)
+            writeLog(log_output, log_level, str(datetime.now()) + " - " + "Response Data Saved", DEBUG)
 
             writeOutput(output_metric, data) 
 
-    writeLog(log_output, log_level, str(datetime.now) + " - " + "All Data Written", INFO)
-    writeLog(log_output, log_level, str(datetime.now) + " - " + "Calculating Metrics & Total Score", INFO)
+    writeLog(log_output, log_level, str(datetime.now()) + " - " + "All Data Written", INFO)
+    writeLog(log_output, log_level, str(datetime.now()) + " - " + "Calculating Metrics & Total Score", INFO)
     
     #Closing all files
     file_ptr.close()
