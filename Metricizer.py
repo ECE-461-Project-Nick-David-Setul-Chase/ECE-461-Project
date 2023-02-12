@@ -160,11 +160,10 @@ def writeLog(file_ptr, log_level, string, access_level):
 def npmjs_scrap(url):
     req = requests.get(url)
     soupTime = BeautifulSoup(req.text, "html.parser")
-    row = soupTime.find("a", {"aria-labelledby":"repository repository-link"})['href']
-    if row is None:
+    if(soupTime.find("a", {"aria-labelledby":"repository repository-link"})['href']) is None:
         return("")
-    else: return(row)
-    
+    else:
+        return(str(soupTime.find("a", {"aria-labelledby":"repository repository-link"})['href']))
 
 def createDir(url_):
     #Grabbing repo name
