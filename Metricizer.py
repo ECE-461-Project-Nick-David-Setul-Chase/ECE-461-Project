@@ -116,6 +116,8 @@ def metricizer(inputfile):
 
             data = [url, readme_exist, doc_exist, issues_closed, issues_total, num_contribute, weeks_last_issue, license_correct]
 
+            print(data)
+
             writeLog(log_output, log_level, str(datetime.now()) + " - " + "Response Data Saved", DEBUG)
 
             writeOutput(output_metric, data) 
