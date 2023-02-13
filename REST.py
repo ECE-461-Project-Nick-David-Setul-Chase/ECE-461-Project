@@ -35,18 +35,18 @@ def call_rest(url, api_token):
             weeks_last_issue = 0
         else:
             # get total amount of issues
-            #issues_total = data_issues["total_count"]
+            issues_total = data_issues["total_count"]
             # find date of last issue and get weeks since, also get closed issues
             issues_closed = 0
-            issues_open = 0
+            #issues_open = 0
             weeks_last_issue = -1
             for issue in data_issues["items"]:
                 #print(issue)
                 # find closed issues
                 if issue['state'] == "closed":
                     issues_closed += 1
-                elif issue['state'] == 'open':
-                    issues_open += 1
+                #elif issue['state'] == 'open':
+                    #issues_open += 1
                     
                 # find weeks since last issue, date format: 'created_at': '2020-04-20T22:16:33Z'
                 weeks_this_issue = abs(datetime.now() - datetime.fromisoformat(issue['created_at'].replace('Z', ''))).days//7
@@ -60,7 +60,7 @@ def call_rest(url, api_token):
             # fail safe if no issues
             if weeks_last_issue == -1:
                 weeks_last_issue = 0
-            issues_total = issues_open + issues_closed
+            #issues_total = issues_open + issues_closed
 
 
         # get license DOES NOT WORK
