@@ -109,7 +109,7 @@ def metricizer(inputfile):
             readme_exist = int(gql_info[0])
             doc_exist = int(gql_info[1])
             issues_closed = gql_info[2]
-            issues_total = rest_info[3]
+            issues_total = gql_info[3]
             num_contribute = gql_info[4]
             weeks_last_issue = gql_info[5]
             license_correct = int(gql_info[6])
