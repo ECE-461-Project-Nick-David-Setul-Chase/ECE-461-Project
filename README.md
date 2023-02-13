@@ -27,6 +27,8 @@ these variables, simply type `export <ENV_VAR>=<VALUE>`.
   * `GITHUB_TOKEN` : Your personal GitHub token to access GitHub APIs
   * `LOG_LEVEL` : Either 0, 1, or 2. These determine the LOG file outputs.
   * `LOG_FILE` : The location you would like the LOG file to be created.
+
+Once environment variables are set, type and enter `./run <URL_FILE>`, where URL_FILE is a text file containing the list of URLs you would like to analyze.
   
 ## Outputs
 A LOG file output will be created in the location specified by the `LOG_FILE`
