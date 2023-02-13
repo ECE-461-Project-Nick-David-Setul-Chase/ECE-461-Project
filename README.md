@@ -18,7 +18,7 @@ Next, type and enter the command `./run install`
 This will install all dependencies needed for proper software execution.
 
 **Note:** In the unlikely event that the run executable file does not exist or work, 
-          please type and enter 'make' and then `./run install`
+          please type and enter `make` and then `./run install`
 
 ## Run
 To run the software, a couple environment variables must be set. Otherwise, the code
