@@ -62,7 +62,7 @@ Description: Prints metric and net scores in ndjson format, ranked in order of h
 to lowest score.
 
 # License & Rights
-## Property of Purdue University ECE 461
-## Developed and owned by Nicholas Williams, David Reed, Setul Parekh, Chase McCoy
+### Property of Purdue University ECE 461
+### Developed and owned by Nicholas Williams, David Reed, Setul Parekh, Chase McCoy
 Dependencies are supported by the [GNU GPL](https://www.gnu.org/licenses/license-list.en.html).
 This software has no license support.
